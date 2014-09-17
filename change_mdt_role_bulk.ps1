@@ -1,15 +1,18 @@
-﻿#Custom Variables
+﻿#Use this to Export a formatted list:
+#Get-MDTComputer | Where-Object {$_.osdcomputername -like "*" } | select osdcomputername,id | export-csv -Path ""
 
-$Module = "C:\tempere\MDTDB.psm1"
-$SQLServer = "sccm2012"
-$DatabaseName = "deployment"
-$CSV = "C:\tempere\computers_roles.csv"
+#Custom Variables
+
+$Module = ""
+$SQLServer = ""
+$DatabaseName = ""
+$CSV = "c:\temp\new_csv."
 
 Import-Module $Module
 Connect-MDTDatabase –sqlServer $SQLServer –database $DatabaseName
 $Computers = Import-Csv $CSV
 
-For ($i=1; $i -le $Computers.count; $i++)
+Foreach ($Computer in $Computers)
 {
-Set-MDTComputerRole -id $Computers[$i-1].id -roles $Computers[$i-1].Role
+Set-MDTComputerRole $Computer.id -roles $Computer.Role
 }
